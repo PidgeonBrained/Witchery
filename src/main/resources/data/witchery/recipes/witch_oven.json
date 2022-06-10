@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SSS",
+    "SFS",
+    "SSS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:stone"
+    },
+    "F": {
+      "item": "minecraft:small_flowers"
+    }
+  },
+  "result": {
+    "item": "witchery:witch_oven"
+  }
+}

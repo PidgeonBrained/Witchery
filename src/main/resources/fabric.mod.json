@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "witchery",
+  "version": "${version}",
+
+  "name": "Witchery",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Pidge",
+    "Vennia"
+  ],
+  "contact": {
+    "homepage": "Ventex240@gmail.com",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "MIT",
+  "icon": "assets/witchery/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.gmail.Ventex240.witchery.Witchery"
+    ],
+    "client": [
+      "com.gmail.Ventex240.witchery.WitcheryClient"
+    ]
+  },
+  "mixins": [
+    "witchery.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.18.x",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "up": "witchery:block/witch_oven_top",
+    "down": "witchery:block/witch_oven_bottom",
+    "north": "witchery:block/witch_oven_front",
+    "east": "witchery:block/witch_oven_side",
+    "south": "witchery:block/witch_oven_side",
+    "west": "witchery:block/witch_oven_side"
+  }
+}

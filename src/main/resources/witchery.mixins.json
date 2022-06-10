@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.gmail.Ventex240.witchery.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "client": [
+    "WitcheryMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
