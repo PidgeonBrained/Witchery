@@ -2,7 +2,7 @@
   "parent": "minecraft:block/orientable_with_bottom",
   "textures": {
     "top": "witchery:block/witch_oven_top",
-    "front": "witchery:block/witch_oven_front",
+    "front": "witchery:block/witch_oven_front_lit",
     "side": "witchery:block/witch_oven_side",
     "bottom": "witchery:block/witch_oven_bottom"
   }

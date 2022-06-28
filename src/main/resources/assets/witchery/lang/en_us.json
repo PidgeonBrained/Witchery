@@ -2,6 +2,8 @@
   "item.witchery.pepsi": "Pepsi",
   "item.witchery.broom": "Broom",
   "block.witchery.witch_oven": "Witch's Oven",
+  "container.witch_oven": "Witch's Oven",
   "block.witchery.babys_breath": "Baby's Breath",
-  "item.witchery.babys_breath_seeds": "Baby's Breath Seeds"
+  "item.witchery.babys_breath_seeds": "Baby's Breath Seeds",
+  "item.witchery.clay_pot": "Clay Pot"
 }

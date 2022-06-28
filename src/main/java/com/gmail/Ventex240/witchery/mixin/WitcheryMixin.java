@@ -30,7 +30,7 @@ public abstract class WitcheryMixin extends LivingEntity {
 	@Inject(at = @At("TAIL"), method = "tick") //For Broom
 	private void tick(CallbackInfo info) {
 		if (!this.abilities.creativeMode && !this.isSpectator()) {
-			if (this.getOffHandStack().getItem() == Witchery.BROOM) {
+			if (this.getOffHandStack().getItem() == Witchery.BROOM) {//TODO:figure out a less intense way of doing this
 				this.abilities.allowFlying = true;
 				broomEquipped = true;
 				this.isFallFlying();

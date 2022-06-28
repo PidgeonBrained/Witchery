@@ -1,43 +1,131 @@
 package com.gmail.Ventex240.witchery.block;
 
 import com.gmail.Ventex240.witchery.Witchery;
-import com.gmail.Ventex240.witchery.block.entity.WitchOvenEntity;
-import net.minecraft.block.AbstractFurnaceBlock;
-import net.minecraft.block.BlockState;
+import com.gmail.Ventex240.witchery.block.entity.WitchOvenBlockEntity;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class WitchOven extends AbstractFurnaceBlock {
+public class WitchOven extends BlockWithEntity {
+    public static final DirectionProperty FACING;
+    public static final BooleanProperty LIT;
 
     public WitchOven(Settings settings) {
         super(settings);
+        this.setDefaultState((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(LIT, false));
     }
 
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        } else {
+            this.openScreen(world, pos, player);
+            return ActionResult.CONSUME;
+        }
+    }
+
+
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return (BlockState)this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+    }
+
+    public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack) {
+        if (itemStack.hasCustomName()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof AbstractFurnaceBlockEntity) {
+                ((AbstractFurnaceBlockEntity)blockEntity).setCustomName(itemStack.getName());
+            }
+        }
+
+    }
+
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!state.isOf(newState.getBlock())) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof AbstractFurnaceBlockEntity) {
+                if (world instanceof ServerWorld) {
+                    ItemScatterer.spawn(world, pos, (AbstractFurnaceBlockEntity)blockEntity);
+                    ((AbstractFurnaceBlockEntity)blockEntity).getRecipesUsedAndDropExperience((ServerWorld)world, Vec3d.ofCenter(pos));
+                }
+
+                world.updateComparators(pos, this);
+            }
+
+            super.onStateReplaced(state, world, pos, newState, moved);
+        }
+    }
+
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
+    }
+
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    }
+
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return (BlockState)state.with(FACING, rotation.rotate((Direction)state.get(FACING)));
+    }
+
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation((Direction)state.get(FACING)));
+    }
+
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(new Property[]{FACING, LIT});
+    }
+
+    @Nullable
+    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<WitchOvenBlockEntity> expectedType) {
+        return world.isClient ? null : checkType(givenType, expectedType, WitchOvenBlockEntity::tick);
+    }
+
+    static {
+        FACING = HorizontalFacingBlock.FACING;
+        LIT = Properties.LIT;
+    }
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new WitchOvenEntity(pos, state);
+        return new WitchOvenBlockEntity(pos, state);
     }
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, BlockEntityType.FURNACE);
+        return checkType(world, type, Witchery.WITCH_OVEN_ENTITY);
     }
 
     protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof FurnaceBlockEntity) {
+        if (blockEntity instanceof WitchOvenBlockEntity) {
             player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
             //player.incrementStat(Stats.INTERACT_WITH_FURNACE);
         }
@@ -61,7 +149,7 @@ public class WitchOven extends AbstractFurnaceBlock {
             double j = random.nextDouble() * 6.0D / 16.0D;
             double k = axis == Direction.Axis.Z ? (double)direction.getOffsetZ() * 0.52D : h;
             world.addParticle(ParticleTypes.SMOKE, d + i, e + j, f + k, 0.0D, 0.0D, 0.0D);
-            world.addParticle(ParticleTypes.FLAME, d + i, e + j, f + k, 0.0D, 0.0D, 0.0D);
+            world.addParticle(ParticleTypes.SOUL_FIRE_FLAME, d + i, e + j, f + k, 0.0D, 0.0D, 0.0D);
         }
     }
 }
