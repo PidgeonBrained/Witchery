@@ -1,8 +1,8 @@
 package com.gmail.Ventex240.witchery.block.entity;
 
+import com.gmail.Ventex240.witchery.Witchery;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.FurnaceScreenHandler;
@@ -11,9 +11,10 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
+
 public class WitchOvenEntity extends AbstractFurnaceBlockEntity {
     public WitchOvenEntity(BlockPos pos, BlockState state) {
-        super(BlockEntityType.FURNACE, pos, state, RecipeType.SMELTING);
+        super(Witchery.WITCH_OVEN_ENTITY, pos, state, RecipeType.SMELTING); //TODO: CHANGE RECIPE TYPE
     }
 
     protected Text getContainerName() {
