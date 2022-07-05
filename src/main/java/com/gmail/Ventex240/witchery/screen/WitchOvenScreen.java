@@ -70,12 +70,13 @@ public class WitchOvenScreen extends HandledScreen<WitchOvenScreenHandler> imple
         this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int k;
         if ((this.handler).isBurning()) {
-            k = (this.handler).getFuelProgress();
-            this.drawTexture(matrices, i + 48, j + 39 + 12 - k, 176, 14 - k, 16, k + 1);
+            k = (int) (((this.handler).getFuelProgress() / 13.0) * 16); //if ui height changes, change the 16
+            //k goes from 12 to 0
+            this.drawTexture(matrices, i + 48, j + 39 + 11 - k, 176, 14 - k, 16, k + 2);
         }
 
-        k = (this.handler).getCookProgress();
-        this.drawTexture(matrices, i + 69, j + 40, 176, 16, k + 1, 9);
+        k = (int) (((this.handler).getCookProgress() / 23.0) * 21); //if ui changes length, change the 21
+        this.drawTexture(matrices, i + 69, j + 40, 176, 16, k, 9);
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
