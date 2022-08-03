@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "minecraft:acacia_log"
+    }
+  ],
+  "result": {
+    "item": "witchery:acacia_hollow_log"
+  }
+}

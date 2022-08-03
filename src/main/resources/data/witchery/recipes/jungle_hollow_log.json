@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "minecraft:jungle_log"
+    }
+  ],
+  "result": {
+    "item": "witchery:jungle_hollow_log"
+  }
+}

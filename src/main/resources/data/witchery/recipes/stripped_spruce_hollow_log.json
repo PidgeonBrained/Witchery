@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "minecraft:stripped_spruce_log"
+    }
+  ],
+  "result": {
+    "item": "witchery:stripped_spruce_hollow_log"
+  }
+}

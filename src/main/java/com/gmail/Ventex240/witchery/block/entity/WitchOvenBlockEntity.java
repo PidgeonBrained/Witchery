@@ -1,9 +1,10 @@
 package com.gmail.Ventex240.witchery.block.entity;
 
 import com.gmail.Ventex240.witchery.Witchery;
+import com.gmail.Ventex240.witchery.block.WitchOven;
+import com.gmail.Ventex240.witchery.recipe.WitchOvenRecipe;
 import com.gmail.Ventex240.witchery.screen.WitchOvenScreenHandler;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
@@ -11,10 +12,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.SharedConstants;
-import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,11 +26,9 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeInputProvider;
 import net.minecraft.recipe.RecipeMatcher;
-import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.RecipeUnlocker;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -54,33 +51,22 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class WitchOvenBlockEntity extends LockableContainerBlockEntity implements SidedInventory, RecipeUnlocker, RecipeInputProvider {
-    protected static final int field_31286 = 0;
-    protected static final int field_31287 = 1;
-    protected static final int field_31288 = 2;
-    public static final int field_31289 = 0;
+
     private static final int[] TOP_SLOTS = new int[]{0};
-    private static final int[] BOTTOM_SLOTS = new int[]{2, 1};
-    private static final int[] SIDE_SLOTS = new int[]{1};
-    public static final int field_31290 = 1;
-    public static final int field_31291 = 2;
-    public static final int field_31292 = 3;
-    public static final int field_31293 = 4;
-    public static final int field_31294 = 200;
-    public static final int field_31295 = 2;
-    protected DefaultedList<ItemStack> inventory;
+    private static final int[] BOTTOM_SLOTS = new int[]{3, 4};
+    private static final int[] SIDE_SLOTS = new int[]{1, 2};
+
+    private DefaultedList<ItemStack> inventory; //For future me: WRITE YOUR OWN CODE!!! don't use mc developer's bullshit
     int burnTime;
     int fuelTime;
     int cookTime;
     int cookTimeTotal;
-    protected final PropertyDelegate propertyDelegate;
+    private final PropertyDelegate propertyDelegate;
     private final Object2IntOpenHashMap<Identifier> recipesUsed;
-    private final RecipeType<? extends AbstractCookingRecipe> recipeType;
+
 
     public WitchOvenBlockEntity(BlockPos pos, BlockState state) {
-        this(Witchery.WITCH_OVEN_ENTITY, pos, state, RecipeType.SMELTING); //TODO: CHANGE RECIPE TYPE
-    }
-    public WitchOvenBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state, RecipeType<? extends AbstractCookingRecipe> recipeType) {
-        super(blockEntityType, pos, state);
+        super(Witchery.WITCH_OVEN_ENTITY, pos, state);
         this.inventory = DefaultedList.ofSize(5, ItemStack.EMPTY);
         this.propertyDelegate = new PropertyDelegate() {
             public int get(int index) {
@@ -120,74 +106,10 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
             }
         };
         this.recipesUsed = new Object2IntOpenHashMap();
-        this.recipeType = recipeType;
     }
 
     public static Map<Item, Integer> createFuelTimeMap() {
-        Map<Item, Integer> map = Maps.newLinkedHashMap();
-        addFuel(map, (ItemConvertible)Items.LAVA_BUCKET, 20000);
-        addFuel(map, (ItemConvertible)Blocks.COAL_BLOCK, 16000);
-        addFuel(map, (ItemConvertible)Items.BLAZE_ROD, 2400);
-        addFuel(map, (ItemConvertible)Items.COAL, 1600);
-        addFuel(map, (ItemConvertible)Items.CHARCOAL, 1600);
-        addFuel(map, (TagKey)ItemTags.LOGS, 300);
-        addFuel(map, (TagKey)ItemTags.PLANKS, 300);
-        addFuel(map, (TagKey)ItemTags.WOODEN_STAIRS, 300);
-        addFuel(map, (TagKey)ItemTags.WOODEN_SLABS, 150);
-        addFuel(map, (TagKey)ItemTags.WOODEN_TRAPDOORS, 300);
-        addFuel(map, (TagKey)ItemTags.WOODEN_PRESSURE_PLATES, 300);
-        addFuel(map, (ItemConvertible)Blocks.OAK_FENCE, 300);
-        addFuel(map, (ItemConvertible)Blocks.BIRCH_FENCE, 300);
-        addFuel(map, (ItemConvertible)Blocks.SPRUCE_FENCE, 300);
-        addFuel(map, (ItemConvertible)Blocks.JUNGLE_FENCE, 300);
-        addFuel(map, (ItemConvertible)Blocks.DARK_OAK_FENCE, 300);
-        addFuel(map, (ItemConvertible)Blocks.ACACIA_FENCE, 300);
-        addFuel(map, (ItemConvertible)Blocks.OAK_FENCE_GATE, 300);
-        addFuel(map, (ItemConvertible)Blocks.BIRCH_FENCE_GATE, 300);
-        addFuel(map, (ItemConvertible)Blocks.SPRUCE_FENCE_GATE, 300);
-        addFuel(map, (ItemConvertible)Blocks.JUNGLE_FENCE_GATE, 300);
-        addFuel(map, (ItemConvertible)Blocks.DARK_OAK_FENCE_GATE, 300);
-        addFuel(map, (ItemConvertible)Blocks.ACACIA_FENCE_GATE, 300);
-        addFuel(map, (ItemConvertible)Blocks.NOTE_BLOCK, 300);
-        addFuel(map, (ItemConvertible)Blocks.BOOKSHELF, 300);
-        addFuel(map, (ItemConvertible)Blocks.LECTERN, 300);
-        addFuel(map, (ItemConvertible)Blocks.JUKEBOX, 300);
-        addFuel(map, (ItemConvertible)Blocks.CHEST, 300);
-        addFuel(map, (ItemConvertible)Blocks.TRAPPED_CHEST, 300);
-        addFuel(map, (ItemConvertible)Blocks.CRAFTING_TABLE, 300);
-        addFuel(map, (ItemConvertible)Blocks.DAYLIGHT_DETECTOR, 300);
-        addFuel(map, (TagKey)ItemTags.BANNERS, 300);
-        addFuel(map, (ItemConvertible)Items.BOW, 300);
-        addFuel(map, (ItemConvertible)Items.FISHING_ROD, 300);
-        addFuel(map, (ItemConvertible)Blocks.LADDER, 300);
-        addFuel(map, (TagKey)ItemTags.SIGNS, 200);
-        addFuel(map, (ItemConvertible)Items.WOODEN_SHOVEL, 200);
-        addFuel(map, (ItemConvertible)Items.WOODEN_SWORD, 200);
-        addFuel(map, (ItemConvertible)Items.WOODEN_HOE, 200);
-        addFuel(map, (ItemConvertible)Items.WOODEN_AXE, 200);
-        addFuel(map, (ItemConvertible)Items.WOODEN_PICKAXE, 200);
-        addFuel(map, (TagKey)ItemTags.WOODEN_DOORS, 200);
-        addFuel(map, (TagKey)ItemTags.BOATS, 1200);
-        addFuel(map, (TagKey)ItemTags.WOOL, 100);
-        addFuel(map, (TagKey)ItemTags.WOODEN_BUTTONS, 100);
-        addFuel(map, (ItemConvertible)Items.STICK, 100);
-        addFuel(map, (TagKey)ItemTags.SAPLINGS, 100);
-        addFuel(map, (ItemConvertible)Items.BOWL, 100);
-        addFuel(map, (TagKey)ItemTags.CARPETS, 67);
-        addFuel(map, (ItemConvertible)Blocks.DRIED_KELP_BLOCK, 4001);
-        addFuel(map, (ItemConvertible)Items.CROSSBOW, 300);
-        addFuel(map, (ItemConvertible)Blocks.BAMBOO, 50);
-        addFuel(map, (ItemConvertible)Blocks.DEAD_BUSH, 100);
-        addFuel(map, (ItemConvertible)Blocks.SCAFFOLDING, 400);
-        addFuel(map, (ItemConvertible)Blocks.LOOM, 300);
-        addFuel(map, (ItemConvertible)Blocks.BARREL, 300);
-        addFuel(map, (ItemConvertible)Blocks.CARTOGRAPHY_TABLE, 300);
-        addFuel(map, (ItemConvertible)Blocks.FLETCHING_TABLE, 300);
-        addFuel(map, (ItemConvertible)Blocks.SMITHING_TABLE, 300);
-        addFuel(map, (ItemConvertible)Blocks.COMPOSTER, 300);
-        addFuel(map, (ItemConvertible)Blocks.AZALEA, 100);
-        addFuel(map, (ItemConvertible)Blocks.FLOWERING_AZALEA, 100);
-        return map;
+        return AbstractFurnaceBlockEntity.createFuelTimeMap();
     }
 
     private static boolean isNonFlammableWood(Item item) {
@@ -259,36 +181,40 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
             --blockEntity.burnTime;
         }
 
-        ItemStack itemStack = (ItemStack)blockEntity.inventory.get(1);
-        if (!blockEntity.isBurning() && (itemStack.isEmpty() || ((ItemStack)blockEntity.inventory.get(0)).isEmpty())) {
+        ItemStack fuelItemStack = (ItemStack)blockEntity.inventory.get(2);
+        if (!blockEntity.isBurning() && (fuelItemStack.isEmpty() || ((ItemStack)blockEntity.inventory.get(0)).isEmpty())) { //if not burning and fuel slot is empty
             if (!blockEntity.isBurning() && blockEntity.cookTime > 0) {
                 blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
             }
-        } else {
-            Recipe<?> recipe = (Recipe)world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
-            int i = blockEntity.getMaxCountPerStack();
-            if (!blockEntity.isBurning() && canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
-                blockEntity.burnTime = blockEntity.getFuelTime(itemStack);
+        } else { //if burning or fuel slot has fuel
+            WitchOvenRecipe recipe = world.getRecipeManager().getFirstMatch(WitchOvenRecipe.Type.INSTANCE, blockEntity, world).orElse(null);
+            int maxCount = blockEntity.getMaxCountPerStack();
+            if (!blockEntity.isBurning() && canAcceptRecipeOutput(recipe, blockEntity.inventory, maxCount)
+                    && canAcceptSecondaryRecipeOutput(recipe, blockEntity.inventory, maxCount)
+                    && hasPots(recipe, blockEntity.inventory)) { //if NOT burning, but has fuel and can output into output slot
+                blockEntity.burnTime = blockEntity.getFuelTime(fuelItemStack);
                 blockEntity.fuelTime = blockEntity.burnTime;
-                if (blockEntity.isBurning()) {
+                if (blockEntity.isBurning()) { //if still burning after refueling
                     bl2 = true;
-                    if (!itemStack.isEmpty()) {
-                        Item item = itemStack.getItem();
-                        itemStack.decrement(1);
-                        if (itemStack.isEmpty()) {
+                    if (!fuelItemStack.isEmpty()) { //if there's still fuel
+                        Item item = fuelItemStack.getItem();
+                        fuelItemStack.decrement(1);
+                        if (fuelItemStack.isEmpty()) {
                             Item item2 = item.getRecipeRemainder();
-                            blockEntity.inventory.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
+                            blockEntity.inventory.set(2, item2 == null ? ItemStack.EMPTY : new ItemStack(item2)); //literally not sure why tf this happens, lmao
                         }
                     }
                 }
             }
 
-            if (blockEntity.isBurning() && canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
+            if (blockEntity.isBurning() && canAcceptRecipeOutput(recipe, blockEntity.inventory, maxCount)
+                    && canAcceptSecondaryRecipeOutput(recipe, blockEntity.inventory, maxCount)
+                    && hasPots(recipe, blockEntity.inventory)) {//if burning (after refueling or whatever) and it can accept the output
                 ++blockEntity.cookTime;
                 if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
                     blockEntity.cookTime = 0;
-                    blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
-                    if (craftRecipe(recipe, blockEntity.inventory, i)) {
+                    blockEntity.cookTimeTotal = getCookTime(world, WitchOvenRecipe.Type.INSTANCE, blockEntity);
+                    if (craftRecipe(recipe, blockEntity.inventory, maxCount)) {
                         blockEntity.setLastRecipe(recipe);
                     }
 
@@ -301,7 +227,7 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
 
         if (bl != blockEntity.isBurning()) {
             bl2 = true;
-            state = (BlockState)state.with(AbstractFurnaceBlock.LIT, blockEntity.isBurning());
+            state = (BlockState)state.with(WitchOven.LIT, blockEntity.isBurning());
             world.setBlockState(pos, state, 3);
         }
 
@@ -311,51 +237,125 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
 
     }
 
-    private static boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
-        if (!((ItemStack)slots.get(0)).isEmpty() && recipe != null) {
-            ItemStack itemStack = recipe.getOutput();
-            if (itemStack.isEmpty()) {
+    private static boolean canAcceptRecipeOutput(WitchOvenRecipe recipe, DefaultedList<ItemStack> slots, int maxCount) {
+        if (!slots.get(0).isEmpty() && recipe != null) { //if input slot has items and there's a recipe
+            ItemStack recipeMainOutputItemStack = recipe.getOutput();
+            if (recipeMainOutputItemStack.isEmpty()) { //if recipe doesnt have an output
                 return false;
-            } else {
-                ItemStack itemStack2 = (ItemStack)slots.get(2);
-                if (itemStack2.isEmpty()) {
-                    return true;
-                } else if (!itemStack2.isItemEqualIgnoreDamage(itemStack)) {
+            } else { //if recipe has an output
+                ItemStack mainOutputItemStack = slots.get(3);
+                if (recipe.getMainCount() > maxCount || recipe.getMainCount() > mainOutputItemStack.getMaxCount()) { //if item outputs more than 64 for some reason
                     return false;
-                } else if (itemStack2.getCount() < count && itemStack2.getCount() < itemStack2.getMaxCount()) {
+                } else if (mainOutputItemStack.isEmpty()) {
+                    return true;
+                } else if (!mainOutputItemStack.isItemEqualIgnoreDamage(recipeMainOutputItemStack)) { //has items in output but items are not equal
+                    return false;
+                } else if ((mainOutputItemStack.getCount() + recipe.getMainCount()) <= maxCount &&
+                        (mainOutputItemStack.getCount() + recipe.getMainCount()) <= mainOutputItemStack.getMaxCount()) {
+                    //has items in the output, and items are the same and can increment with output amount
                     return true;
                 } else {
-                    return itemStack2.getCount() < itemStack.getMaxCount();
+                    return false;
                 }
             }
-        } else {
+        } else { //if input slot doesnt have items or there's no recipe
             return false;
         }
     }
 
-    private static boolean craftRecipe(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
-        if (recipe != null && canAcceptRecipeOutput(recipe, slots, count)) {
-            ItemStack itemStack = (ItemStack)slots.get(0);
-            ItemStack itemStack2 = recipe.getOutput();
-            ItemStack itemStack3 = (ItemStack)slots.get(2);
-            if (itemStack3.isEmpty()) {
-                slots.set(2, itemStack2.copy());
-            } else if (itemStack3.isOf(itemStack2.getItem())) {
-                itemStack3.increment(1);
+
+    private static boolean canAcceptSecondaryRecipeOutput(WitchOvenRecipe recipe, DefaultedList<ItemStack> slots, int maxCount) {
+        //Assumes there's items in the input slot and there's a recipe
+
+        if (recipe.getSecondaryOutput() == null) { //if recipe doesnt have a secondary output
+            return true;
+        } else { //if recipe has an output
+            ItemStack recipeSecondaryOutputItemStack = recipe.getSecondaryOutput();
+            ItemStack SecondaryOutputItemStack = slots.get(4);
+            if (recipe.getSecondaryCount() > maxCount || recipe.getSecondaryCount() > SecondaryOutputItemStack.getMaxCount()) { //if item outputs more than 64 for some reason
+                return false;
+            } else if (SecondaryOutputItemStack.isEmpty()) {
+                return true;
+            } else if (!SecondaryOutputItemStack.isItemEqualIgnoreDamage(recipeSecondaryOutputItemStack)) { //has items in output but items are not equal
+                return false;
+            } else if ((SecondaryOutputItemStack.getCount() + recipe.getSecondaryCount()) <= maxCount &&
+                    (SecondaryOutputItemStack.getCount() + recipe.getSecondaryCount()) <= SecondaryOutputItemStack.getMaxCount()) {
+                //has items in the output, and items are the same and can increment with output amount
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private static boolean hasPots(WitchOvenRecipe recipe, DefaultedList<ItemStack> slots) {
+        if (!recipe.consumesPot()) { //if recipe doesnt need a pot, craft is valid
+            return true;
+        }
+        else {
+            ItemStack pots = slots.get(1);
+            if (pots.isEmpty()) {
+                return false;
+            }
+            else if (pots.isOf(Witchery.CLAY_POT)) {
+                return true;
+            }
+            else { return false;}
+        }
+
+    }
+
+    private static boolean craftRecipe(WitchOvenRecipe recipe, DefaultedList<ItemStack> slots, int maxCount) {
+        if (recipe != null && canAcceptRecipeOutput(recipe, slots, maxCount) && canAcceptSecondaryRecipeOutput(recipe, slots, maxCount)
+                && hasPots(recipe, slots)) { //if it has a recipe and can process recipe and hasPots
+            ItemStack inputItemStack = slots.get(0);
+
+            boolean secondaryCraftSuccess, mainCraftSuccess = Math.random() <= recipe.getMainChance(); //Math.random() returns a double between 0.0 and 1.0
+
+            if (recipe.getSecondaryOutput() == null) {
+                secondaryCraftSuccess = false;
+            } else {
+                secondaryCraftSuccess = Math.random() <= recipe.getSecondaryChance(); //Math.random() returns a double between 0.0 and 1.0
             }
 
-            if (itemStack.isOf(Blocks.WET_SPONGE.asItem()) && !((ItemStack)slots.get(1)).isEmpty() && ((ItemStack)slots.get(1)).isOf(Items.BUCKET)) {
-                slots.set(1, new ItemStack(Items.WATER_BUCKET));
+            if (mainCraftSuccess) {
+                ItemStack recipeMainOutput = recipe.getOutput();
+                ItemStack mainOutput = slots.get(3);
+                if (mainOutput.isEmpty()) {
+                    slots.set(3, recipeMainOutput.copy());
+                    slots.get(3).increment(recipe.getMainCount() - 1);
+
+                } else if (mainOutput.isOf(recipeMainOutput.getItem())) {
+                    mainOutput.increment(recipe.getMainCount());
+                }
             }
 
-            itemStack.decrement(1);
+            if (secondaryCraftSuccess) {
+                ItemStack recipeSecondaryOutput = recipe.getSecondaryOutput();
+                ItemStack secondaryOutput = slots.get(4);
+                if (secondaryOutput.isEmpty()) {
+                    slots.set(4, recipeSecondaryOutput.copy());
+                    slots.get(4).increment(recipe.getSecondaryCount() - 1);
+
+
+                } else if (secondaryOutput.isOf(recipeSecondaryOutput.getItem())) {
+                    secondaryOutput.increment(recipe.getSecondaryCount());
+                }
+            }
+
+            if (recipe.consumesPot()) {
+                ItemStack pots = slots.get(1);
+                pots.decrement(1);
+            }
+
+            inputItemStack.decrement(1);
             return true;
         } else {
             return false;
         }
     }
 
-    protected int getFuelTime(ItemStack fuel) {
+    private int getFuelTime(ItemStack fuel) {
         if (fuel.isEmpty()) {
             return 0;
         } else {
@@ -364,8 +364,8 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
         }
     }
 
-    private static int getCookTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
-        return (Integer)world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(AbstractCookingRecipe::getCookTime).orElse(200);
+    private static int getCookTime(World world, WitchOvenRecipe.Type recipeType, Inventory inventory) {
+        return (Integer)world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(WitchOvenRecipe::getCookTime).orElse(200);
     }
 
     public static boolean canUseAsFuel(ItemStack stack) {
@@ -385,11 +385,7 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
     }
 
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        if (dir == Direction.DOWN && slot == 1) {
-            return stack.isOf(Items.WATER_BUCKET) || stack.isOf(Items.BUCKET);
-        } else {
             return true;
-        }
     }
 
     public int size() {
@@ -412,7 +408,7 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
     }
 
     public ItemStack getStack(int slot) {
-        return (ItemStack)this.inventory.get(slot);
+        return this.inventory.get(slot);
     }
 
     public ItemStack removeStack(int slot, int amount) {
@@ -432,7 +428,7 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
         }
 
         if (slot == 0 && !bl) {
-            this.cookTimeTotal = getCookTime(this.world, this.recipeType, this);
+            this.cookTimeTotal = getCookTime(this.world, WitchOvenRecipe.Type.INSTANCE, this);
             this.cookTime = 0;
             this.markDirty();
         }
@@ -448,12 +444,14 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
     }
 
     public boolean isValid(int slot, ItemStack stack) {
-        if (slot == 2) {
+        if (slot == 3 || slot == 4) {
             return false;
-        } else if (slot != 1) {
+        } else if (slot == 1) {
+            return stack.isOf(Witchery.CLAY_POT);
+        } else if (slot == 0) {
             return true;
         } else {
-            ItemStack itemStack = (ItemStack)this.inventory.get(1);
+            ItemStack itemStack = (ItemStack)this.inventory.get(2);
             return canUseAsFuel(stack) || stack.isOf(Items.BUCKET) && !itemStack.isOf(Items.BUCKET);
         }
     }
@@ -492,7 +490,7 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
             Entry<Identifier> entry = (Entry)var4.next();
             world.getRecipeManager().get((Identifier)entry.getKey()).ifPresent((recipe) -> {
                 list.add(recipe);
-                dropExperience(world, pos, entry.getIntValue(), ((AbstractCookingRecipe)recipe).getExperience());
+                dropExperience(world, pos, entry.getIntValue(), ((WitchOvenRecipe)recipe).getExperience());
             });
         }
 
@@ -518,6 +516,8 @@ public class WitchOvenBlockEntity extends LockableContainerBlockEntity implement
         }
 
     }
+
+    @Override
     protected Text getContainerName() {
         return new TranslatableText("container.witch_oven");
     }

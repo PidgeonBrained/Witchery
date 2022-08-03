@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:chest"
+    },
+    {
+      "item": "minecraft:stripped_dark_oak_log"
+    }
+  ],
+  "result": {
+    "item": "witchery:stripped_dark_oak_hollow_log"
+  }
+}

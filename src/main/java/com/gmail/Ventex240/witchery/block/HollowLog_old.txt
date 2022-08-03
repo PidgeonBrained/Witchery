@@ -1,0 +1,124 @@
+package com.gmail.Ventex240.witchery.block;
+
+
+import com.gmail.Ventex240.witchery.block.entity.HollowLogBlockEntity;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+
+
+public class HollowLog extends BlockWithEntity {
+
+    public static final EnumProperty<Direction.Axis> AXIS;
+    public static final BooleanProperty OPEN;
+
+    public HollowLog(Settings settings) {
+        super(settings);
+        this.setDefaultState(this.getDefaultState().with(AXIS, Direction.Axis.Y).with(OPEN, false));
+    }
+
+    static {
+        AXIS = Properties.AXIS;
+        OPEN = Properties.OPEN;
+    }
+
+    public static BlockState changeRotation(BlockState state, BlockRotation rotation) {
+        switch(rotation) {
+            case COUNTERCLOCKWISE_90:
+            case CLOCKWISE_90:
+                switch(state.get(AXIS)) {
+                    case X:
+                        return state.with(AXIS, Direction.Axis.Z);
+                    case Z:
+                        return state.with(AXIS, Direction.Axis.X);
+                    default:
+                        return state;
+                }
+            default:
+                return state;
+        }
+    }
+
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return changeRotation(state, rotation);
+    }
+
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return (BlockState)this.getDefaultState().with(AXIS, ctx.getSide().getAxis());
+    }
+
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(new Property[]{AXIS, OPEN});
+    }
+
+
+    // A side effect of extending BlockWithEntity is it changes the render type to INVISIBLE, so we have to revert this
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new HollowLogBlockEntity(pos, state);
+    }
+
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) { //TODO: implement
+        super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        } else {
+            this.openScreen(world, pos, player);
+            return ActionResult.CONSUME;
+        }
+    }
+
+    protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof HollowLogBlockEntity) {
+            player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
+        }
+
+    }
+
+
+    @Override
+    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if (itemStack.hasCustomName()) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof HollowLogBlockEntity) {
+                ((HollowLogBlockEntity)blockEntity).setCustomName(itemStack.getName());
+            }
+        }
+    }
+
+
+}

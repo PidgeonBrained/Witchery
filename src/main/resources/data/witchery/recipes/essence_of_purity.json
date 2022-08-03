@@ -1,0 +1,17 @@
+{
+  "type": "witchery:witch_oven",
+  "ingredient": {
+    "item": "witchery:babys_breath_flower"
+  },
+  "main_result": {
+    "item": "witchery:essence_of_purity",
+    "chance": 0.70
+  },
+  "secondary_result": {
+    "item": "witchery:trace_of_magic",
+    "chance": 1
+  },
+  "consumes_pot": true,
+  "experience": 0.35,
+  "cookingtime": 200
+}

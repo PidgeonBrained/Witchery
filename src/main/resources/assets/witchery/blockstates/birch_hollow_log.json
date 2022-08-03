@@ -1,0 +1,56 @@
+{
+  "variants": {
+    "facing=down,open=false": {
+      "x": 180,
+      "model": "witchery:block/birch_hollow_log"
+    },
+    "facing=down,open=true": {
+      "x": 180,
+      "model": "witchery:block/birch_hollow_log_open"
+    },
+    "facing=east,open=false": {
+      "x": 90,
+      "y": 90,
+      "model": "witchery:block/birch_hollow_log"
+    },
+    "facing=east,open=true": {
+      "x": 90,
+      "y": 90,
+      "model": "witchery:block/birch_hollow_log_open"
+    },
+    "facing=north,open=false": {
+      "x": 90,
+      "model": "witchery:block/birch_hollow_log"
+    },
+    "facing=north,open=true": {
+      "x": 90,
+      "model": "witchery:block/birch_hollow_log_open"
+    },
+    "facing=south,open=false": {
+      "x": 90,
+      "y": 180,
+      "model": "witchery:block/birch_hollow_log"
+    },
+    "facing=south,open=true": {
+      "x": 90,
+      "y": 180,
+      "model": "witchery:block/birch_hollow_log_open"
+    },
+    "facing=up,open=false": {
+      "model": "witchery:block/birch_hollow_log"
+    },
+    "facing=up,open=true": {
+      "model": "witchery:block/birch_hollow_log_open"
+    },
+    "facing=west,open=false": {
+      "x": 90,
+      "y": 270,
+      "model": "witchery:block/birch_hollow_log"
+    },
+    "facing=west,open=true": {
+      "x": 90,
+      "y": 270,
+      "model": "witchery:block/birch_hollow_log_open"
+    }
+  }
+}

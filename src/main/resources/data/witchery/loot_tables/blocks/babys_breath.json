@@ -13,13 +13,13 @@
               "conditions": [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "witchery:babys_breath",
+                  "block": "witchery:babys_breath_block",
                   "properties": {
                     "age": "7"
                   }
                 }
               ],
-              "name": "witchery:wheat"
+              "name": "witchery:babys_breath_flower"
             },
             {
               "type": "minecraft:item",
@@ -46,13 +46,13 @@
               }
             }
           ],
-          "name": "minecraft:wheat_seeds"
+          "name": "witchery:babys_breath_seeds"
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "minecraft:wheat",
+          "block": "witchery:babys_breath_block",
           "properties": {
             "age": "7"
           }
