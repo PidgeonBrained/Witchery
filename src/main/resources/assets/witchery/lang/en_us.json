@@ -32,5 +32,7 @@
   "block.witchery.stripped_dark_oak_hollow_log":"Stripped Dark Oak Hollow Log",
   "block.witchery.stripped_jungle_hollow_log":"Stripped Jungle Hollow Log",
   "block.witchery.stripped_oak_hollow_log":"Stripped Oak Hollow Log",
-  "block.witchery.stripped_spruce_hollow_log":"Stripped Spruce Hollow Log"
+  "block.witchery.stripped_spruce_hollow_log":"Stripped Spruce Hollow Log",
+  "block.witchery.altar_block": "Altar Block",
+  "item.witchery.altar_cloth": "Altar Cloth"
 }

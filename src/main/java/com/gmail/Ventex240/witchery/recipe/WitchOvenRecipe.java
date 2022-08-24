@@ -150,7 +150,7 @@ public class WitchOvenRecipe implements Recipe<Inventory> {
             }));
 
             if (mainCount > 64) {
-                System.out.println("Output: " + tempResultItem + " count cannot be over 64"); //TODO: maybe find a better way to do this, maybe using logger?
+                Witchery.error("Witch Oven output: " + tempResultItem + " count cannot be over 64", new IllegalStateException());
                 mainCount = 0;
             }
 
@@ -168,7 +168,7 @@ public class WitchOvenRecipe implements Recipe<Inventory> {
                     return new IllegalStateException("Item: " + tempResultItem2 + " does not exist");
                 }));
                 if (secondaryCount > 64) {
-                    System.out.println("Output: " + tempResultItem + " count cannot be over 64");
+                    Witchery.error("Witch Oven output: " + tempResultItem + " count cannot be over 64", new IllegalStateException());
                     secondaryCount = 0;
                 }
 

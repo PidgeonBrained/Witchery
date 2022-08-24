@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "enabled=false,conditional=false": {
+      "model": "minecraft:block/andesite"
+    },
+
+    "enabled=true,conditional=false": {
+      "model": "minecraft:block/cobblestone"
+    },
+    "enabled=true,conditional=true": {
+      "model": "minecraft:block/cobbled_deepslate"
+    }
+  }
+}

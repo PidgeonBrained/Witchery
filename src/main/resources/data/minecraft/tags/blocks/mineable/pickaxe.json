@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "witchery:witch_oven"
+    "witchery:witch_oven",
+    "witchery:altar_block"
   ]
 }

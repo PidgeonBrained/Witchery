@@ -1,5 +1,6 @@
 package com.gmail.Ventex240.witchery;
 
+import com.gmail.Ventex240.witchery.block.AltarBlock;
 import com.gmail.Ventex240.witchery.block.BabysBreathBlock;
 import com.gmail.Ventex240.witchery.block.HollowLog;
 import com.gmail.Ventex240.witchery.block.WitchOven;
@@ -11,10 +12,12 @@ import com.gmail.Ventex240.witchery.recipe.WitchOvenRecipe;
 import com.gmail.Ventex240.witchery.screen.WitchOvenScreenHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
@@ -38,6 +41,9 @@ public class Witchery implements ModInitializer {
 
 	public static final Item ALCHEMIC_POPPET = new Item(new FabricItemSettings().group(ItemGroup.MISC)); //TODO:add witchery tab
 	public static final Item ALMIGHTY_SOUL = new Item(new FabricItemSettings().group(ItemGroup.MISC));
+
+	public static final AltarBlock ALTAR_BLOCK = new AltarBlock(FabricBlockSettings.of(Material.STONE).requiresTool().strength(3.5F));
+	public static final Item ALTAR_CLOTH = new Item(new FabricItemSettings().group(ItemGroup.MISC)); //TODO: change
 
 	public static final CropBlock BABYS_BREATH_BLOCK =
 			new BabysBreathBlock(AbstractBlock.Settings.of(Material.PLANT).nonOpaque().noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
@@ -98,6 +104,10 @@ public class Witchery implements ModInitializer {
 
 		Registry.register(Registry.ITEM, new Identifier("witchery", "alchemic_poppet"), ALCHEMIC_POPPET);
 		Registry.register(Registry.ITEM, new Identifier("witchery", "almighty_soul"), ALMIGHTY_SOUL);
+
+		Registry.register(Registry.BLOCK, new Identifier("witchery", "altar_block"), ALTAR_BLOCK);
+		Registry.register(Registry.ITEM, new Identifier("witchery", "altar_block"), new BlockItem(ALTAR_BLOCK, new FabricItemSettings().group(ItemGroup.DECORATIONS)));
+		Registry.register(Registry.ITEM, new Identifier("witchery", "altar_cloth"), ALTAR_CLOTH);
 
 		Registry.register(Registry.BLOCK, new Identifier("witchery","babys_breath_block"), BABYS_BREATH_BLOCK);
 		Registry.register(Registry.ITEM, new Identifier("witchery","babys_breath_seeds"), BABYS_BREATH_SEEDS);
@@ -194,4 +204,10 @@ public class Witchery implements ModInitializer {
 		LOGGER.info("Witchery Initialized");
 
 	}
+
+
+	public static void error(String message, Throwable error) {
+		LOGGER.error(message, error);
+	}
+
 }

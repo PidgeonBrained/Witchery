@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "witchery:acacia_hollow_log",
+    "witchery:birch_hollow_log",
+    "witchery:dark_oak_hollow_log",
+    "witchery:jungle_hollow_log",
+    "witchery:oak_hollow_log",
+    "witchery:spruce_hollow_log",
+    "witchery:stripped_acacia_hollow_log",
+    "witchery:stripped_birch_hollow_log",
+    "witchery:stripped_dark_oak_hollow_log",
+    "witchery:stripped_jungle_hollow_log",
+    "witchery:stripped_oak_hollow_log",
+    "witchery:stripped_spruce_hollow_log"
+  ]
+}
